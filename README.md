@@ -103,7 +103,7 @@ apex-trigger-framework/
 
 ## Setup
 
-Prerequisites: Salesforce CLI (`npm install --global @salesforce/cli`), a Dev Hub org, Node.js 20+, and Java 11+ (used by Prettier's Apex parser and by PMD).
+Prerequisites: Salesforce CLI (`npm install --global @salesforce/cli`), a Dev Hub org, Node.js 22+, and Java 11+ (used by Prettier's Apex parser and by PMD).
 
 ```bash
 # 1. Authorise your Dev Hub (opens a browser)
