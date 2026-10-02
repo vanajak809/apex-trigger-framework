@@ -1,0 +1,40 @@
+{
+  "records": [
+    {
+      "attributes": { "type": "Case", "referenceId": "CaseRef1" },
+      "AccountId": "@MemberRef1",
+      "Subject": "Synthetic dispute - duplicate card charge",
+      "Service_Category__c": "Card Dispute",
+      "Transaction_Reference__c": "TXN-00000001",
+      "Disputed_Amount__c": 42.5,
+      "Status": "New",
+      "Origin": "Web"
+    },
+    {
+      "attributes": { "type": "Case", "referenceId": "CaseRef2" },
+      "AccountId": "@MemberRef2",
+      "Subject": "Synthetic dispute - high value merchant charge",
+      "Service_Category__c": "Card Dispute",
+      "Transaction_Reference__c": "TXN-00000002",
+      "Disputed_Amount__c": 12500,
+      "Status": "New",
+      "Origin": "Phone"
+    },
+    {
+      "attributes": { "type": "Case", "referenceId": "CaseRef3" },
+      "AccountId": "@MemberRef3",
+      "Subject": "Synthetic fraud alert - unrecognised login",
+      "Service_Category__c": "Fraud Alert",
+      "Status": "New",
+      "Origin": "Web"
+    },
+    {
+      "attributes": { "type": "Case", "referenceId": "CaseRef4" },
+      "AccountId": "@MemberRef1",
+      "Subject": "Synthetic loan inquiry - rate question",
+      "Service_Category__c": "Loan Inquiry",
+      "Status": "New",
+      "Origin": "Email"
+    }
+  ]
+}

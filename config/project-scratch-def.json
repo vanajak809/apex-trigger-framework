@@ -1,0 +1,11 @@
+{
+  "orgName": "Northwind Credit Union - Trigger Framework Demo",
+  "edition": "Developer",
+  "hasSampleData": false,
+  "features": [],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    }
+  }
+}

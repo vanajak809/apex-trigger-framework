@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description
+    >Registers trigger handler classes per SObject, with ordering, recursion depth and an optional bypass custom permission.</description>
+    <label>Trigger Setting</label>
+    <pluralLabel>Trigger Settings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

@@ -1,0 +1,8 @@
+# Generated / vendor
+node_modules/
+coverage/
+.sfdx/
+.sf/
+package-lock.json
+**/staticresources/**
+*.md

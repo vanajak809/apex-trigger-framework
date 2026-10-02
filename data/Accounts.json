@@ -1,0 +1,22 @@
+{
+  "records": [
+    {
+      "attributes": { "type": "Account", "referenceId": "MemberRef1" },
+      "Name": "Synthetic Member Alpha",
+      "Member_Number__c": "NW-000101",
+      "Member_Tier__c": "Standard"
+    },
+    {
+      "attributes": { "type": "Account", "referenceId": "MemberRef2" },
+      "Name": "Synthetic Member Bravo",
+      "Member_Number__c": "NW-000102",
+      "Member_Tier__c": "Premier"
+    },
+    {
+      "attributes": { "type": "Account", "referenceId": "MemberRef3" },
+      "Name": "Synthetic Member Charlie",
+      "Member_Number__c": "NW-000103",
+      "Member_Tier__c": "Private"
+    }
+  ]
+}

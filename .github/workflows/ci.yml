@@ -1,0 +1,131 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-checks:
+    name: Format, lint, unit tests, Code Analyzer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Java is needed by prettier-plugin-apex (parser) and by PMD inside Code Analyzer.
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prettier check
+        run: npm run prettier:verify
+
+      - name: Install Salesforce CLI and Code Analyzer
+        run: |
+          npm install --global @salesforce/cli
+          sf plugins install code-analyzer
+          sf --version
+
+      - name: Salesforce Code Analyzer
+        run: |
+          sf code-analyzer run \
+            --config-file code-analyzer.yml \
+            --workspace . \
+            --target force-app \
+            --rule-selector Recommended \
+            --severity-threshold 2 \
+            --output-file code-analyzer-results.html
+
+      - name: Upload Code Analyzer report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-analyzer-results
+          path: code-analyzer-results.html
+          if-no-files-found: ignore
+
+  # The scratch-org job only runs when the repository owner has configured a
+  # Dev Hub auth URL as the SFDX_AUTH_URL secret. Forks and PRs without the
+  # secret skip it cleanly. No secret value is stored in this repository.
+  check-org-secret:
+    name: Check for Dev Hub secret
+    runs-on: ubuntu-latest
+    outputs:
+      has-auth: ${{ steps.check.outputs.has-auth }}
+    steps:
+      - id: check
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+        run: |
+          if [ -n "$SFDX_AUTH_URL" ]; then
+            echo "has-auth=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-auth=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  scratch-org-validate:
+    name: Deploy and run Apex tests in a scratch org (optional)
+    needs: [static-checks, check-org-secret]
+    if: needs.check-org-secret.outputs.has-auth == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
+      - name: Authenticate Dev Hub
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+        run: echo "$SFDX_AUTH_URL" | sf org login sfdx-url --sfdx-url-stdin --alias devhub --set-default-dev-hub
+
+      - name: Create scratch org
+        run: |
+          sf org create scratch \
+            --definition-file config/project-scratch-def.json \
+            --alias ci-scratch \
+            --set-default \
+            --duration-days 1 \
+            --wait 20
+
+      - name: Deploy source
+        run: sf project deploy start --target-org ci-scratch --wait 30
+
+      - name: Run Apex tests
+        run: |
+          sf apex run test \
+            --target-org ci-scratch \
+            --test-level RunLocalTests \
+            --code-coverage \
+            --result-format human \
+            --wait 30
+
+      - name: Delete scratch org
+        if: always()
+        run: sf org delete scratch --target-org ci-scratch --no-prompt || true

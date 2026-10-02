@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description
+    >Users with this permission skip trigger handlers whose Trigger Setting references it (data loads, migrations).</description>
+    <isLicensed>false</isLicensed>
+    <label>Bypass Triggers</label>
+</CustomPermission>

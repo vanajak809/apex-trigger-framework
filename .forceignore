@@ -1,0 +1,15 @@
+# List files or directories below to ignore them when running sf project deploy/retrieve
+package.xml
+
+# LWC configuration files
+**/jsconfig.json
+**/.eslintrc.json
+**/eslint.config.js
+
+# LWC Jest
+**/__tests__/**
+
+# Local tooling
+**/.prettierrc
+**/.prettierignore
+**/*.dup

@@ -1,0 +1,7 @@
+# Salesforce Code Analyzer (v5) configuration.
+# Test files are exercised by Jest / Apex tests; static rules aimed at
+# production code (e.g. no setTimeout) are not applied to them.
+ignores:
+  files:
+    - "**/__tests__/**"
+    - "**/node_modules/**"
